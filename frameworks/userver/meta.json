@@ -1,7 +1,8 @@
 {
   "display_name": "userver",
   "language": "C++",
-  "type": "production",
+  "type": "flagship",
+  "mode": "standard",
   "engine": "userver",
   "description": "Asynchronous framework with a rich set of abstractions for fast and comfortable creation of C++ microservices, services and utilities",
   "repo": "https://github.com/userver-framework/userver",
@@ -10,7 +11,13 @@
     "baseline",
     "pipelined",
     "limited-conn",
-    "static"
+    "json",
+    "json-comp",
+    "upload",
+    "api-4",
+    "api-16",
+    "static",
+    "async-db"
   ],
   "maintainers": ["botanegg"]
 }
