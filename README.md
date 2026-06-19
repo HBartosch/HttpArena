@@ -34,7 +34,7 @@ Always specify `-f <framework>`. Results are automatically compared against the 
 | Workload | `json`, `json-comp`, `json-tls`, `upload`, `static` | JSON serialization, gzip/brotli compression, HTTP/1.1 over TLS, 20 MB body ingestion, 20-file static asset serving |
 | Database | `async-db`, `crud` | Async Postgres sequential scan; realistic REST API with cached reads, list, upsert, update, and optional Redis cache |
 | Templates | `fortunes` * | DB query + HTML template render (TechEmpower-style Fortunes). Reference-only — measures template-engine throughput, not part of the composite score |
-| Multi-endpoint | `api-4`, `api-16` | Mixed baseline + JSON + async-db at CPU-budget cliffs (4 and 16 CPUs) |
+| Multi-endpoint | `api-4`, `api-16` | Mixed baseline + JSON + async-db at CPU-budget cliffs (4 and 16 logical CPUs, i.e. 2 and 8 full SMT cores) |
 | H/2 | `baseline-h2`, `static-h2`, `baseline-h2c`, `json-h2c` | Baseline + static over TLS with h2 stream multiplexing; baseline + JSON over cleartext h2 (prior-knowledge, port 8082) |
 | H/3 | `baseline-h3`, `static-h3` | Baseline and static over QUIC with TLS 1.3 |
 | gRPC | `unary-grpc`, `unary-grpc-tls`, `stream-grpc`, `stream-grpc-tls` | Unary and server-streaming gRPC over plaintext HTTP/2 and TLS |
@@ -85,6 +85,14 @@ Prefer HTML, e.g. to set the size:
 </a>
 ```
 
+Another badge variants:
+- Http/1.1: `https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-h1.svg`
+- Http/2: `https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-h2.svg`
+- Http/3: `https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-h3.svg`
+- Gateway: `https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-gateway.svg`
+- WebSocket: `https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-websocket.svg`
+- gRPC: `https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-grpc.svg`
+
 ---
 
 <div align="left">
@@ -92,3 +100,43 @@ Prefer HTML, e.g. to set the size:
     <img alt="Benchmarked by HttpArena" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/wordmark.svg" width="235">
   </a>
 </div>
+
+<br>
+
+
+<table>
+  <tr>
+    <td align="">
+      <a href="https://www.http-arena.com/#sort=rps:-1&type=flagship&tuned=0">
+        <img alt="Benchmarked by HttpArena H/1.1" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-h1.svg" width="235">
+      </a>
+    </td>
+    <td align="">
+      <a href="https://www.http-arena.com/#scope=h2&type=flagship&tuned=0">
+        <img alt="Benchmarked by HttpArena H/1.1" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-h2.svg" width="235">
+      </a>
+    </td>
+    <td align="">
+      <a href="https://www.http-arena.com/#scope=h3&type=flagship&tuned=0">
+        <img alt="Benchmarked by HttpArena H/1.1" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-h3.svg" width="235">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="">
+      <a href="https://www.http-arena.com/#scope=gw&type=flagship&tuned=0">
+        <img alt="Benchmarked by HttpArena H/1.1" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-gateway.svg" width="235">
+      </a>
+    </td>
+    <td align="">
+      <a href="https://www.http-arena.com/#scope=grpc&type=flagship&tuned=0">
+        <img alt="Benchmarked by HttpArena H/1.1" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-grpc.svg" width="235">
+      </a>
+    </td>
+    <td align="">
+      <a href="https://www.http-arena.com/#scope=ws&type=flagship&tuned=0">
+        <img alt="Benchmarked by HttpArena H/1.1" src="https://cdn.jsdelivr.net/gh/MDA2AV/httparena-badge/httparena-badge-websocket.svg" width="235">
+      </a>
+    </td>
+  </tr>
+</table>

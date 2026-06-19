@@ -1,3 +1,18 @@
+//! HttpArena: zix-grpc
+//! zix version: 0.4.x
+//!
+//! zix HttpArena gRPC (h2c) entry point.
+//!
+//! Intent: demonstrate zix.Grpc (EPOLL dispatch model) against the HttpArena
+//! gRPC benchmark suite (unary, server-streaming).
+//!
+//! Design choices:
+//! - GetSum: unary SumRequest{a, b} -> SumReply{a + b}. The compute is a single
+//!   add and the reply is a few bytes, well below the response-cache crossover,
+//!   so caching would cost more than it saves and stays off here.
+//! - StreamSum: server-streaming, count replies of a + b + i.
+//! - max_streams is wide enough that a client opening many parallel streams is
+//!   never refused at startup.
 const std = @import("std");
 const zix = @import("zix");
 
@@ -6,10 +21,24 @@ const zix = @import("zix");
 const PORT: u16 = 8080;
 /// Required for ipv4 and ipv6
 const LISTEN_IP: []const u8 = "::";
-const DISPATCH_MODEL: zix.Grpc.DispatchModel = .EPOLL;
+const DISPATCH_MODEL: zix.Grpc.DispatchModel = .URING;
 const KERNEL_BACKLOG: u31 = 1024 * 16;
 const WORKERS: usize = 0;
+
+/// 0 selects the engine default EPOLL pool (max(10, cpu*2)). Each worker owns one connection
+/// while it is active. After the Phase 1 syscall cuts the unary path is CPU-bound, not
+/// connection-bound: a modest cpu-relative pool tops out throughput, while an oversized pool
+/// (thread-per-connection) thrashes the scheduler and collapses it. So keep the default.
 const POOL_SIZE: usize = 0;
+
+/// Advertise enough concurrent streams that a client opening many in parallel (h2load uses
+/// -m 100) is never refused at startup. Must be >= the load generator's stream count or those
+/// streams get REFUSED_STREAM. Per-stream buffers are tiny (below), so a wide table is cheap.
+const MAX_STREAMS: usize = 128;
+
+/// gRPC sum messages are a few bytes. A small per-stream body buffer keeps the wide stream
+/// table affordable in memory (MAX_STREAMS * MAX_BODY per connection).
+const MAX_BODY: usize = 4 * 1024;
 
 // --------------------------------------------------------- //
 
@@ -92,6 +121,8 @@ pub fn main(process: std.process.Init) !void {
         .kernel_backlog = KERNEL_BACKLOG,
         .workers = WORKERS,
         .pool_size = POOL_SIZE,
+        .max_streams = MAX_STREAMS,
+        .max_body = MAX_BODY,
     });
     defer server.deinit();
 
