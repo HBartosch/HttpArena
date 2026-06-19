@@ -160,6 +160,26 @@
     "status_5xx": 0
   },
   {
+    "framework": "effinitive",
+    "language": "C#",
+    "rps": 296350,
+    "avg_latency": "1.72ms",
+    "p99_latency": "42.30ms",
+    "cpu": "4010.9%",
+    "memory": "211MiB",
+    "connections": 512,
+    "threads": 64,
+    "duration": "5s",
+    "pipeline": 1,
+    "bandwidth": "563.29MB/s",
+    "input_bw": "22.04MB/s",
+    "reconnects": 59269,
+    "status_2xx": 1481753,
+    "status_3xx": 0,
+    "status_4xx": 0,
+    "status_5xx": 0
+  },
+  {
     "framework": "elysia",
     "language": "TS",
     "rps": 348593,
