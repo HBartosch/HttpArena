@@ -34,8 +34,6 @@ public sealed class ProcessedItem
     public double Price { get; set; }
     public int Quantity { get; set; }
     public bool Active { get; set; }
-    // Suppress default-init: these are always set in the endpoint loop so
-    // the default [] / new() would be immediately discarded (wasted alloc).
     public List<string> Tags { get; set; } = null!;
     public RatingInfo Rating { get; set; } = null!;
     public double Total { get; set; }
