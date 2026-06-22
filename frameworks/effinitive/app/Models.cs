@@ -45,7 +45,6 @@ public sealed class RatingInfo
     public int Count { get; set; }
 }
 
-
 [JsonSerializable(typeof(ResponseDto<ProcessedItem>))]
 [JsonSerializable(typeof(ResponseDto<DbResponseItemDto>))]
 [JsonSerializable(typeof(DbResponseItemDto))]
