@@ -255,6 +255,13 @@
     "type": "infrastructure",
     "engine": "caddy"
   },
+  "cadente": {
+    "dir": "cadente",
+    "description": "Cadente is a standalone managed HTTP/1.1 server for .NET, running directly on sockets without the Sisk framework layer.",
+    "repo": "https://github.com/sisk-http/core",
+    "type": "engine",
+    "engine": "managed sockets"
+  },
   "cardigan": {
     "dir": "cardigan",
     "description": "Java HTTP engine built on io_uring, Panama FFI, virtual threads, and thread-per-core event loops.",
