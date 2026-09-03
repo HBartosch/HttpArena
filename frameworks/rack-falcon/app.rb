@@ -4,6 +4,7 @@ Symbol.alias_method(:to_s, :name)
 # Our Rack application to be executed by rackup
 
 require 'rack'
+require 'uri'
 
 class App
   CONTENT_TYPE = 'Content-Type'
@@ -14,7 +15,7 @@ class App
     when '/pipeline'
       render_plain 'ok'
     when '/baseline11'
-      params = Rack::Utils.parse_query(env['QUERY_STRING'])
+      params = URI.decode_www_form(env['QUERY_STRING']).to_h
       total = params['a'].to_i + params['b'].to_i
       if env['REQUEST_METHOD'] == 'POST'
         body = env["rack.input"]&.read
@@ -22,7 +23,7 @@ class App
       end
       render_plain total.to_s
     when '/baseline2'
-      params = Rack::Utils.parse_query(env['QUERY_STRING'])
+      params = URI.decode_www_form(env['QUERY_STRING']).to_h
       total = params['a'].to_i + params['b'].to_i
       render_plain total.to_s
     else
