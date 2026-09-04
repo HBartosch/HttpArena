@@ -376,6 +376,13 @@
       "response": true
     }
   },
+  "edixoi": {
+    "dir": "edixoi",
+    "description": "edixoi \u2014 the ioxide io_uring runtime on the raw recv/send API, and nothing above it. One reactor per core, each owning its ring and its share of the SO_REUSEPORT listeners; multishot accept and recv into provided buffer rings, with continuations resuming inline on the reactor thread that took the request. The HTTP/1.1 handling (request line, query string, case-insensitive headers, Content-Length and chunked bodies, keep-alive, pipelining, reads fragmented across recv boundaries) is hand-written against that API \u2014 no framework, no router. One handler answers on both doors: plaintext on :8080, and TLS on :8081 terminated ring-natively by OpenSSL for json-tls and the 8gbit echo. The async profile's wait is an IORING_OP_TIMEOUT through ioxide.timer, so a held connection costs a kernel deadline rather than a thread. Companion to the ioxide-pipes entry, which serves the same profiles over System.IO.Pipelines.",
+    "repo": "https://github.com/MDA2AV/ioxide",
+    "type": "engine",
+    "engine": "io_uring"
+  },
   "effinitive": {
     "dir": "effinitive",
     "description": "Ultra-high-performance custom HTTP server for .NET 10 \u2014 built from scratch for maximum speed.",
