@@ -2,6 +2,7 @@ using GenHTTP.Api.Content;
 
 using GenHTTP.Modules.IO;
 using GenHTTP.Modules.IoxideFiles;
+using GenHTTP.Modules.Compression;
 using GenHTTP.Modules.Layouting;
 using GenHTTP.Modules.Layouting.Provider;
 using GenHTTP.Modules.Webservices;
@@ -21,7 +22,9 @@ public static class Project
                         .AddService<Baseline>("baseline11")
                         .AddService<Baseline>("baseline2")
                         .AddService<Echo>("echo")
-                        .AddService<Json>("json");
+                        .AddService<Json>("json")
+                        // The async profile: /delay/{ms} holds the request without holding a thread.
+                        .Add("delay", new DelayBuilder());
 
         // async-db and crud require a configured Postgres (DATABASE_URL).
         if (Postgres.Enabled)
@@ -44,8 +47,8 @@ public static class Project
 
         if (Directory.Exists(staticDir))
         {
-            // Serve static files through ioxide.file (baked native responses + statx revalidation)
-            // rather than GenHTTP's Modules.Files, whose FileResource overflows the ioxide write slab.
+            // Bodies read positionally off the ring, with the descriptors kept in a per-reactor
+            // snapshot - the point of the engine, and the reason this entry exists.
             app.Add("static", IoxideFiles.From(staticDir));
         }
 
