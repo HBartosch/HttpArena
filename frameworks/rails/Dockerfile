@@ -1,4 +1,4 @@
-FROM ruby:4.0.6-slim
+FROM ruby:4.1.0-preview1-slim
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential libpq-dev libyaml-dev libjemalloc2 libpq5 && \
@@ -9,7 +9,6 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 # YJIT is enabled by Rails
 # ENV RUBY_YJIT_ENABLE=1
-ENV RUBY_MN_THREADS=1
 ENV RACK_ENV=production
 ENV WEB_CONCURRENCY=auto
 ENV RAILS_MAX_THREADS=3
