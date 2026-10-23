@@ -69,7 +69,41 @@ fn main() {
 		}
 		c.after(int(ms), delay_done, u64(ms))
 	})
-	app.listen('0.0.0.0:8080') or { panic(err) }
+	// 8gbit: the body comes back through the framework's body and response API.
+	app.post('/echo', fn (mut c viltrum.Ctx) {
+		c.bytes(200, 'application/octet-stream', c.body())
+	})
+	// echo-ws: each message comes back as it came, text or binary, from the worker
+	// that owns the connection.
+	app.ws('/ws', viltrum.WsHandler{
+		on_message: fn (mut s viltrum.Ws, m viltrum.WsMessage) {
+			if m.binary {
+				s.send_binary(m.data)
+			} else {
+				s.send_text(m.text())
+			}
+		}
+	})
+	mut listeners := [viltrum.Listener{
+		addr: '0.0.0.0:8080'
+	}]
+	// json-tls and 8gbit on 8081; the TLS hardening check on 9000 with its own pair,
+	// which it replaces on disk while the server runs.
+	for dir, port in {
+		'/certs':     8081
+		'/certs-tls': 9000
+	} {
+		if os.exists('${dir}/server.crt') {
+			listeners << viltrum.Listener{
+				addr: '0.0.0.0:${port}'
+				tls:  viltrum.TlsOptions{
+					cert_file: '${dir}/server.crt'
+					key_file:  '${dir}/server.key'
+				}
+			}
+		}
+	}
+	app.serve(listeners) or { panic(err) }
 }
 
 // first is a view of a's first n items; safe because n <= a.len and jsonenc only reads.
